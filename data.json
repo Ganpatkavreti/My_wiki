@@ -1,0 +1,29 @@
+{
+  "categories": [
+    {
+      "name": "दर्शन",
+      "articles": [
+        {
+          "title": "ज्ञान और भक्ति",
+          "date": "2026-01-10",
+          "file": "articles/bhakti.html"
+        },
+        {
+          "title": "द्वैत और अद्वैत",
+          "date": "2026-01-12",
+          "file": "articles/dwait-advait.html"
+        }
+      ]
+    },
+    {
+      "name": "विज्ञान",
+      "articles": [
+        {
+          "title": "क्वांटम चेतना",
+          "date": "2026-01-15",
+          "file": "articles/quantum-chetna.html"
+        }
+      ]
+    }
+  ]
+}
