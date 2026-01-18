@@ -1,59 +1,40 @@
-const menu = document.getElementById("menu");
-const titleEl = document.getElementById("title");
-const textEl = document.getElementById("text");
-const dateEl = document.getElementById("date");
-
-let latestArticle = null;
+let articles = [];
 
 fetch("data.json")
   .then(res => res.json())
   .then(data => {
-    data.categories.forEach(category => {
-      const li = document.createElement("li");
-      li.className = "dropdown";
+    articles = data.articles;
 
-      const a = document.createElement("a");
-      a.href = "#";
-      a.textContent = category.name + " ▾";
+    // latest article first
+    articles.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      const ul = document.createElement("ul");
-      ul.className = "dropdown-menu";
-
-      category.articles.forEach(article => {
-        // latest article check
-        if (!latestArticle || article.date > latestArticle.date) {
-          latestArticle = article;
-        }
-
-        const subLi = document.createElement("li");
-        const subA = document.createElement("a");
-        subA.href = "#";
-        subA.textContent = article.title;
-
-        subA.onclick = () => loadArticle(article);
-
-        subLi.appendChild(subA);
-        ul.appendChild(subLi);
-      });
-
-      li.appendChild(a);
-      li.appendChild(ul);
-      menu.appendChild(li);
-    });
-
-    // auto-load latest article
-    if (latestArticle) {
-      loadArticle(latestArticle);
-    }
+    buildMenu(articles);
+    loadArticle(articles[0]);
   });
 
-function loadArticle(article) {
-  titleEl.textContent = article.title;
-  dateEl.textContent = article.date;
+function buildMenu(list) {
+  const menu = document.getElementById("menu");
+  menu.innerHTML = "";
 
-  fetch(article.file)
-    .then(res => res.text())
-    .then(html => {
-      textEl.innerHTML = html;
-    });
+  list.forEach(article => {
+    const li = document.createElement("li");
+    li.textContent = article.title;
+    li.onclick = () => loadArticle(article);
+    menu.appendChild(li);
+  });
 }
+
+function loadArticle(article) {
+  document.getElementById("title").textContent = article.title;
+  document.getElementById("date").textContent = article.date;
+  document.getElementById("articleFrame").src = article.file;
+}
+
+/* Search */
+document.getElementById("search").addEventListener("input", function () {
+  const q = this.value.toLowerCase();
+  const filtered = articles.filter(a =>
+    a.title.toLowerCase().includes(q)
+  );
+  buildMenu(filtered);
+});
